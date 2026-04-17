@@ -5,6 +5,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import google from '@/assets/google.png'
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -13,6 +15,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,12 +147,14 @@ export default function Signup() {
           </motion.button>
 
           <div className="relative flex items-center py-2">
-            <div className="flex-grow border-t border-gray-100"></div>
-            <span className="flex-shrink mx-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest">or</span>
-            <div className="flex-grow border-t border-gray-100"></div>
+            <div className="grow border-t border-gray-100"></div>
+            <span className="shrink mx-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest">or</span>
+            <div className="grow border-t border-gray-100"></div>
           </div>
 
-          <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 rounded-full border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-all duration-300">
+          <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 
+          rounded-full border border-gray-200 text-gray-600 text-sm font-semibold 
+          hover:bg-gray-50 transition-all duration-300 cursor-pointer" onClick={()=>{signIn("google")}}>
             <Image src={google} width={18} height={18} alt="google" className="opacity-80" />
             Continue with Google
           </button>
@@ -164,7 +169,8 @@ export default function Signup() {
         className="mt-8 text-sm text-gray-400 flex items-center gap-1"
       >
         Already have an account?
-        <button className="text-[#2A3439] font-semibold hover:underline underline-offset-4 decoration-1">
+        <button className="text-[#2A3439] font-semibold hover:underline 
+        underline-offset-4 decoration-1 cursor-pointer" onClick={() => router.push("/signin")}>
           Sign In
         </button>
       </motion.div>

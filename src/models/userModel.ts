@@ -4,17 +4,19 @@ interface IUser {
     _id?: mongoose.Types.ObjectId;
     name: string;
     email: string;
-    password: string;
+    password?: string;
     mobile?: string;
     role: "admin" | "customer";
+    image?: string;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     mobile: { type: String },
     role: { type: String, enum: ["admin", "customer"], default: "customer" },
+    image: { type: String }
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

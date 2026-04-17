@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
+import backgroundImage from '../assets/bgImage.jpeg';
 
 export default function Welcome() {
-  // Variants for a smooth, staggered entrance
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -15,7 +15,7 @@ export default function Welcome() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
@@ -25,15 +25,23 @@ export default function Welcome() {
   };
 
   return (
-    /* Deep, luxurious gradient background */
-    <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-[#4A3728] to-[#4B5320] text-center p-6 overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center min-h-screen text-center p-6 overflow-hidden bg-[#1a1a1a]">
+      <motion.div
+        initial={{ scale: 1.1, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${backgroundImage.src})` }}
+      />
+      
+      <div className="absolute inset-0 bg-black/40 z-10" />
+
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="max-w-4xl mx-auto"
+        className="relative z-20 max-w-4xl mx-auto"
       >
-        {/* Eyebrow Tagline: Changed to a soft, sandy beige for subtle contrast */}
         <motion.span
           variants={itemVariants}
           className="text-sm md:text-base text-[#D4C3B3] tracking-[0.2em] uppercase mb-4 block font-medium"
@@ -41,7 +49,6 @@ export default function Welcome() {
           Curated Living
         </motion.span>
 
-        {/* Main Headline: Bright ivory for maximum readability and impact */}
         <motion.h1
           variants={itemVariants}
           className="text-5xl md:text-7xl font-serif text-[#F9F6F0] mb-6 leading-tight"
@@ -49,7 +56,6 @@ export default function Welcome() {
           Elevate Your Space with Timeless Design.
         </motion.h1>
 
-        {/* Subheadline: Muted cream so it doesn't fight the headline for attention */}
         <motion.p
           variants={itemVariants}
           className="text-lg md:text-xl text-[#D1C7BD] mb-10 max-w-2xl mx-auto leading-relaxed"
@@ -57,17 +63,14 @@ export default function Welcome() {
           Discover handcrafted pieces that blend modern aesthetics with everyday comfort. Turn your house into a home.
         </motion.p>
 
-        {/* Call to Action Buttons */}
         <motion.div 
           variants={itemVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-4"
         >
-          {/* Normal Segment Button: Light outlined ghost button */}
           <button className="w-full sm:w-auto px-8 py-4 border border-[#D4C3B3] text-[#D4C3B3] hover:bg-[#D4C3B3] hover:text-[#4A3728] transition-colors duration-300 font-medium text-lg tracking-wide">
             Everyday Essentials
           </button>
           
-          {/* Luxurious Segment Button: Solid ivory block to draw the eye as the primary action */}
           <button className="w-full sm:w-auto px-8 py-4 bg-[#F9F6F0] text-[#4A3728] hover:bg-[#E8E0D5] transition-colors duration-300 font-medium text-lg tracking-wide shadow-lg hover:shadow-xl">
             The Luxury Edit
           </button>
