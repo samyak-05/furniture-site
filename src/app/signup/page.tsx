@@ -24,6 +24,7 @@ export default function Signup() {
 
     try {
       const res = await axios.post('/api/auth/signup', { name, email, password });
+      router.push("/signin");
       console.log("Success:", res.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || "An unexpected error occurred.";
@@ -154,7 +155,7 @@ export default function Signup() {
 
           <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 
           rounded-full border border-gray-200 text-gray-600 text-sm font-semibold 
-          hover:bg-gray-50 transition-all duration-300 cursor-pointer" onClick={()=>{signIn("google")}}>
+          hover:bg-gray-50 transition-all duration-300 cursor-pointer" onClick={() => signIn("google", { callbackUrl: "/" })}>
             <Image src={google} width={18} height={18} alt="google" className="opacity-80" />
             Continue with Google
           </button>

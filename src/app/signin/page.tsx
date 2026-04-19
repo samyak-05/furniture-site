@@ -24,18 +24,29 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         email,
-        password
-      })
-      console.log("Sign-in successful");
+        password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        setError("Invalid email or password");
+        setLoading(false);
+        return;
+      }
+
+      if (res?.ok) {
+        console.log("Sign-in successful");
+        router.push("/");
+        router.refresh(); 
+      }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || "An unexpected error occurred.";
-      setError(errorMessage);
+      setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
-  }
+  };
   const formValid = email !== "" && password !== "";
 
   return (
@@ -125,8 +136,8 @@ export default function Signup() {
             whileHover={formValid && !loading ? { scale: 1.01 } : {}}
             whileTap={formValid && !loading ? { scale: 0.98 } : {}}
             className={`w-full mt-4 py-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-500 shadow-xl flex items-center justify-center gap-2 ${formValid && !loading
-                ? "bg-[#2A3439] text-white shadow-black/20 hover:bg-[#1F282C]"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+              ? "bg-[#2A3439] text-white shadow-black/20 hover:bg-[#1F282C]"
+              : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
               }`}
             disabled={!formValid || loading}
           >
@@ -142,7 +153,7 @@ export default function Signup() {
 
           <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 
           rounded-full border border-gray-200 text-gray-600 text-sm font-semibold 
-          hover:bg-gray-50 transition-all duration-300 cursor-pointer" onClick={()=>{signIn("google")}}>
+          hover:bg-gray-50 transition-all duration-300 cursor-pointer" onClick={() => signIn("google", { callbackUrl: "/" })}>
             <Image src={google} width={18} height={18} alt="google" className="opacity-80" />
             Continue with Google
           </button>
