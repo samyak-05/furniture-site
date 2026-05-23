@@ -17,7 +17,7 @@ export async function POST(req: NextRequest){
         const description = formData.get("description") as string;
         const price =formData.get("price") as string;
         const category = formData.get("category") as string;
-        const imageFiles = formData.getAll("image") as Blob[];
+        const imageFiles = formData.getAll("images") as Blob[];
         const isLuxury = formData.get("isLuxury") === "true";
 
         if (!imageFiles || imageFiles.length === 0) {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest){
         const newProduct = await Product.create({
             name,
             description,
-            price,
+            price: parseFloat(price),
             category,
             isLuxury,
             image: validUrls
