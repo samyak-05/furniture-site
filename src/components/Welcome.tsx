@@ -70,23 +70,23 @@ export default function Welcome() {
           className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-4"
         >
           <button 
-            onClick={() => router.push('/mood')}
+            onClick={() => router.push('/classic')}
             className="group w-full sm:w-auto px-10 py-4 border border-white/30 
             text-white hover:bg-white hover:text-black transition-all duration-500 
             font-sans text-sm tracking-[0.2em] uppercase backdrop-blur-sm cursor-pointer"
           >
-            Explore MOOD
+            Explore Classic
           </button>
           
-          {/* RAAS BUTTON - Bold, Royal, Luxury */}
+          {/* Elite BUTTON - Bold, Royal, Luxury */}
           <button 
-            onClick={() => router.push('/raas')}
+            onClick={() => router.push('/elite')}
             className="relative w-full sm:w-auto px-10 py-4 bg-[#D4AF37] text-black 
             font-['Playfair_Display'] text-lg font-bold tracking-[0.1em] 
             uppercase shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_35px_rgba(212,175,55,0.5)] 
             transition-all duration-500 hover:-translate-y-1 cursor-pointer"
           >
-            Enter R A A S
+            Enter ELITE
             {/* Animated Underline for Luxe Feel */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-black/40 group-hover:w-12 transition-all duration-500" />
           </button>

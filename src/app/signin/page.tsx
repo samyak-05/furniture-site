@@ -1,22 +1,22 @@
 'use client'
-import { motion } from "motion/react"
+import { motion } from "framer-motion" // Adjusted import structure for standard motion variants
 import { Mail, Key, EyeClosed, Eye, ArrowRight, AlertCircle } from 'lucide-react';
 import { useState } from 'react'
 import Image from 'next/image'
 import google from '@/assets/google.png'
-import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn, useSession, getSession } from "next-auth/react";
 
 export default function Signup() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
   const router = useRouter();
-  const session = useSession();
-  console.log(session);
+  const searchParams = useSearchParams();
+  const { data: session } = useSession();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ export default function Signup() {
       const res = await signIn("credentials", {
         email,
         password,
-        redirect: false,
+        redirect: false, // Prevents NextAuth from handling the redirect automatically
       });
 
       if (res?.error) {
@@ -38,7 +38,20 @@ export default function Signup() {
 
       if (res?.ok) {
         console.log("Sign-in successful");
-        router.push("/");
+        
+        // 1. Fetch the active session to check user data details
+        const currentSession = await getSession();
+        
+        // 2. Get the callbackUrl from query params, or default to home root page
+        const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+        // 3. Smart routing check
+        if (currentSession?.user?.role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push(callbackUrl);
+        }
+
         router.refresh(); 
       }
     } catch (err: any) {
@@ -47,6 +60,7 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
   const formValid = email !== "" && password !== "";
 
   return (

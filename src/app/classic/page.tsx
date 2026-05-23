@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import React from "react";
 
-export default function MoodPage() {
+export default function ClassicPage() {
     return (
         <div>
             <Navbar />
