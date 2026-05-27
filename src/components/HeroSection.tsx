@@ -1,108 +1,182 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-const slides = [
-  {
-    id: 1,
-    title: "The Artisanal Estate",
-    subtitle: "Handcrafted legacy furniture curated in deep forest olives and sun-soaked beige.",
-    btnText: "Explore Collection",
-    bg: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop", 
-  },
-  {
-    id: 2,
-    title: "Organic Grandeur",
-    subtitle: "Where minimalist aesthetics meet the timeless comfort of earthy tones.",
-    btnText: "View Lookbook",
-    bg: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop",
-  }
-];
+interface IProduct {
+  _id: string;
+  name: string;
+  price: string;
+  description: string;
+  category: string;
+  isLuxury: boolean;
+  image: string[];
+  model3d?: string;
+}
 
 export default function HeroSection() {
-  const [current, setCurrent] = useState(0);
+  const router = useRouter();
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  
+  const luxuryEase = [0.16, 1, 0.3, 1];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 8000);
-    return () => clearInterval(timer);
+    async function fetchHeroProducts() {
+      try {
+        const response = await fetch('/api/products/hero');
+        if (response.ok) {
+          const data = await response.json();
+          setProducts(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch lookbook assets", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchHeroProducts();
   }, []);
 
+  useEffect(() => {
+    if (products.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
+    }, 10000); // Dynamic 10s intervals
+    return () => clearInterval(interval);
+  }, [products]);
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen bg-[#F5DBCE] flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  const activeProduct = products[currentIndex] || {
+    _id: "default",
+    name: "Estate Curation",
+    description: "Handcrafted legacy furniture curated in natural peach cream clays, architectural stones, and rich wooden textures.",
+    image: ["https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop"]
+  };
+
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#1a1c14]">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={current}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
-          className="absolute inset-0 z-0"
-        >
-          <Image
-            src={slides[current].bg}
-            alt={slides[current].title}
-            fill
-            priority
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a1c14] via-[#1a1c14]/70 to-transparent z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1c14]/50 via-transparent to-transparent z-10" />
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="relative z-20 h-full flex flex-col justify-center px-6 md:px-24 max-w-7xl">
-        <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="space-y-4 md:space-y-8"
-        >
-          <div className="inline-block px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-[#A3B18A] text-[9px] font-bold tracking-[0.6em] uppercase mb-4 shadow-2xl">
-            RAAS ESTATE EDITION
-          </div>
-
-          <h1 className="text-6xl md:text-[9rem] font-serif text-[#F5F5DC] leading-[0.85] tracking-tighter italic">
-            {slides[current].title.split(' ').map((word, i) => (
-              <motion.span 
-                key={i}
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 + i * 0.1, duration: 1.2 }}
-                className="block"
-              >
-                {word}
-              </motion.span>
-            ))}
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.7 }}
-            transition={{ delay: 1.4, duration: 1 }}
-            className="text-[#EAE7D9] text-lg md:text-xl max-w-xl font-light pt-4"
+    <section className="relative w-full h-screen bg-[#F5DBCE] overflow-hidden flex flex-col justify-between pt-24 select-none">
+      
+      {/* BACKGROUND IMAGE SLIDER OVERLAYS */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: luxuryEase }}
+            className="absolute inset-0 w-full h-full"
           >
-            {slides[current].subtitle}
-          </motion.p>
+            <Image
+              src={activeProduct.image[0]} 
+              alt={activeProduct.name}
+              fill
+              priority
+              className="object-cover object-center filter brightness-[0.88]"
+            />
+            {/* Blended Peach Cream & Shadow masks */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#F5DBCE]/30 via-transparent to-black/40 z-10" />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-          <div className="pt-10 flex items-center gap-8">
-            <button className="group relative px-12 py-5 bg-[#3A5A40] text-[#F5F5DC] overflow-hidden rounded-full transition-all duration-700 hover:shadow-[0_0_50px_rgba(58,90,64,0.5)]">
-              <div className="absolute inset-0 bg-[#A3B18A] translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500" />
-              <span className="relative z-10 flex items-center gap-3 font-bold uppercase text-[11px] tracking-widest group-hover:text-[#1a1c14] transition-colors">
-                {slides[current].btnText} <ArrowUpRight size={18} />
-              </span>
-            </button>
-            <div className="flex gap-4">
-              {slides.map((_, i) => (
-                <button key={i} onClick={() => setCurrent(i)} className={`h-[1px] transition-all duration-1000 ${current === i ? 'w-16 bg-[#A3B18A]' : 'w-6 bg-white/20'}`} />
+      {/* TOP HEADER LAYER - FIXED STARK BLACK */}
+      <div className="relative z-20 w-full flex flex-col items-center text-center px-4 mt-12 md:mt-16">
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, ease: luxuryEase }}
+          className="text-6xl sm:text-7xl md:text-[8.5rem] font-serif font-light text-black tracking-[0.15em] leading-none drop-shadow-sm uppercase"
+        >
+          WEBSITE
+        </motion.h1>
+        
+        <motion.p 
+          initial={{ opacity: 0, tracking: "0.1em" }}
+          animate={{ opacity: 0.9, tracking: "0.45em" }}
+          transition={{ delay: 0.4, duration: 1.2, ease: luxuryEase }}
+          className="text-xs sm:text-sm font-light text-black uppercase pl-[0.45em] mt-4 tracking-[0.45em] drop-shadow-sm"
+        >
+          THE NEW COLLECTION
+        </motion.p>
+      </div>
+
+      {/* BOTTOM CONTROL BLOCKS */}
+      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-16 pb-12 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-8 mt-auto">
+        
+        {/* Left Column: Descriptions remain cleanly overlayed in soft off-white text */}
+        <div className="max-w-xs md:max-w-md h-24 flex flex-col justify-end">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              transition={{ duration: 0.6, ease: luxuryEase }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black drop-shadow-sm">
+                {activeProduct.name}
+              </p>
+              <p className="text-[12px] font-light leading-relaxed text-[#FFFDF9] mt-1.5 font-sans drop-shadow-sm line-clamp-3">
+                {activeProduct.description}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Right Column: Dynamic Loops Indicators & Black Action Unit */}
+        <div className="flex flex-col items-start sm:items-end gap-6 w-full sm:w-auto shrink-0">
+          
+          {/* Visual Progress indices mapped in stark Black */}
+          {products.length > 1 && (
+            <div className="flex gap-2.5 mb-2">
+              {products.map((_, index) => (
+                <div 
+                  key={index} 
+                  className={`h-[2px] rounded-full transition-all duration-1000 ${
+                    currentIndex === index ? 'w-12 bg-black' : 'w-4 bg-black/30'
+                  }`}
+                />
               ))}
             </div>
+          )}
+
+          {/* Action unit */}
+          <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto justify-between sm:justify-end">
+            <button 
+              onClick={() => router.push(`/product/${activeProduct._id}`)}
+              className="px-8 py-3.5 bg-black text-[#F5DBCE] rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 hover:bg-neutral-900 hover:shadow-2xl hover:shadow-black/40 shadow-lg active:scale-95"
+            >
+              Shop Now
+            </button>
+            
+            <button 
+              onClick={() => router.push('/classic')}
+              className="group flex items-center gap-3 text-xs font-semibold tracking-widest uppercase text-[#FFFDF9] drop-shadow-sm transition-all"
+            >
+              <span className="border-b border-[#FFFDF9]/40 pb-0.5 group-hover:border-[#FFFDF9] transition-all">
+                Explore All
+              </span>
+              <span className="text-lg transition-transform duration-300 group-hover:translate-x-1.5 text-black font-bold">
+                →
+              </span>
+            </button>
           </div>
-        </motion.div>
+          
+        </div>
+
       </div>
+
     </section>
   );
 }

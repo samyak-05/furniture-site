@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -9,6 +10,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com', // Google Profile Pics ke liye
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com', // For Cloudinary product images
       },
     ],
   },
