@@ -12,6 +12,7 @@ export default function AddProduct() {
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [genre, setGenre] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
@@ -25,6 +26,7 @@ export default function AddProduct() {
       formData.append("price", price);
       formData.append("category", category);
       formData.append("isLuxury", isLuxury.toString());
+      formData.append("genre", genre);
       
       if (thumbnail) {
         formData.append("images", thumbnail);
@@ -117,7 +119,7 @@ export default function AddProduct() {
                 <option value="table">Table</option>
                 <option value="sofa">Sofa</option>
                 <option value="bed">Bed</option>
-                <option value="cabinet">Cabinet</option>
+                <option value="diningtable">Dining Table</option>
                 <option value="others">Others</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5 text-gray-400">
@@ -129,6 +131,33 @@ export default function AddProduct() {
           </div>
         </div>
 
+        <div className="flex flex-col gap-2">
+            <label className="text-xs font-black uppercase tracking-widest text-black/80" htmlFor="genre">
+              Genre
+            </label>
+            <div className="relative">
+              <select
+                id="genre"
+                name="genre"
+                value={genre}
+                onChange={(e) => setGenre(e.target.value)}
+                className="w-full px-5 py-4 bg-[#FAF9F6] border border-black/[0.06] rounded-[20px] text-sm font-medium text-[#2A3439] focus:outline-none focus:border-black/20 focus:bg-white transition-all duration-200 cursor-pointer appearance-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.01)]"
+                required
+              >
+                <option value="">Select a genre</option>
+                <option value="living">Living Room</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="dining">Dining</option>
+                <option value="drawing">Drawing Room</option>
+                <option value="sitout">Sitout</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5 text-gray-400">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
         <div className="flex flex-col gap-2">
           <label className="text-xs font-black uppercase tracking-widest text-black/80">
             Main Cover Thumbnail

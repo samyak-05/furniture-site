@@ -1,15 +1,14 @@
-'use client'
-import { SessionProvider } from 'next-auth/react'
-import React from 'react'
+'use client';
+import { SessionProvider } from 'next-auth/react';
+import React from 'react';
 
-function Provider({ children } : { children: React.ReactNode }) {
+export default function Provider({ children } : { children: React.ReactNode }) {
   return (
-    <div>
-      <SessionProvider>
-        {children}
-      </SessionProvider>
-    </div>
-  )
+    <SessionProvider 
+      refetchOnWindowFocus={false} 
+      refetchWhenOffline={false}
+    >
+      {children}
+    </SessionProvider>
+  );
 }
-
-export default Provider

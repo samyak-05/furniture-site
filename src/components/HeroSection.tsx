@@ -26,7 +26,7 @@ export default function HeroSection() {
   useEffect(() => {
     async function fetchHeroProducts() {
       try {
-        const response = await fetch('/api/products/hero');
+        const response = await fetch('/api/products/elite-hero');
         if (response.ok) {
           const data = await response.json();
           setProducts(data);
@@ -98,8 +98,22 @@ export default function HeroSection() {
           transition={{ duration: 1.4, ease: luxuryEase }}
           className="text-6xl sm:text-7xl md:text-[8.5rem] font-serif font-light text-black tracking-[0.15em] leading-none drop-shadow-sm uppercase"
         >
-          WEBSITE
         </motion.h1>
+
+        <div className="h-32 md:h-48 flex items-center justify-center">
+                  <AnimatePresence mode="wait">
+                    <motion.h1 
+                      key={currentIndex}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 1, ease: luxuryEase }}
+                      className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light text-brown tracking-wide leading-tight uppercase filter drop-shadow-md text-center"
+                    >
+                      {activeProduct.name}
+                    </motion.h1>
+                  </AnimatePresence>
+                </div>
         
         <motion.p 
           initial={{ opacity: 0, tracking: "0.1em" }}
@@ -124,9 +138,6 @@ export default function HeroSection() {
               exit={{ opacity: 0, x: 10 }}
               transition={{ duration: 0.6, ease: luxuryEase }}
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black drop-shadow-sm">
-                {activeProduct.name}
-              </p>
               <p className="text-[12px] font-light leading-relaxed text-[#FFFDF9] mt-1.5 font-sans drop-shadow-sm line-clamp-3">
                 {activeProduct.description}
               </p>
@@ -155,21 +166,9 @@ export default function HeroSection() {
           <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto justify-between sm:justify-end">
             <button 
               onClick={() => router.push(`/product/${activeProduct._id}`)}
-              className="px-8 py-3.5 bg-black text-[#F5DBCE] rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 hover:bg-neutral-900 hover:shadow-2xl hover:shadow-black/40 shadow-lg active:scale-95"
+              className="px-8 py-3.5 bg-black text-[#F5DBCE] cursor-pointer rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 hover:bg-neutral-900 hover:shadow-2xl hover:shadow-black/40 shadow-lg active:scale-95"
             >
               Shop Now
-            </button>
-            
-            <button 
-              onClick={() => router.push('/classic')}
-              className="group flex items-center gap-3 text-xs font-semibold tracking-widest uppercase text-[#FFFDF9] drop-shadow-sm transition-all"
-            >
-              <span className="border-b border-[#FFFDF9]/40 pb-0.5 group-hover:border-[#FFFDF9] transition-all">
-                Explore All
-              </span>
-              <span className="text-lg transition-transform duration-300 group-hover:translate-x-1.5 text-black font-bold">
-                →
-              </span>
             </button>
           </div>
           

@@ -9,7 +9,9 @@ interface IProduct{
     isLuxury: boolean;
     createdAt?: Date;
     image: Array<string>;
-    model3d?: string
+    model3d?: string;
+    views: number;
+    genre: string;
 }
 
 const productSchema = new mongoose.Schema<IProduct>({
@@ -27,7 +29,7 @@ const productSchema = new mongoose.Schema<IProduct>({
     },
     category: { 
         type: String, 
-        enum: ['chair', 'table', 'sofa', 'bed', 'cabinet','others'], 
+        enum: ['chair', 'table', 'sofa', 'bed','diningtable','others'], 
         required: true 
     },
     isLuxury: { 
@@ -46,6 +48,15 @@ const productSchema = new mongoose.Schema<IProduct>({
         type: String,
         required : false,
         trim : true
+    },
+    views:{
+        type: Number,
+        default: 0
+    },
+    genre:{
+        type: String,
+        enum:['living', 'bedroom', 'dining', 'drawing', 'sitout'],
+        required: true
     }
 }, { timestamps: true });
 

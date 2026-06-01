@@ -19,6 +19,7 @@ export async function POST(req: NextRequest){
         const category = formData.get("category") as string;
         const imageFiles = formData.getAll("images") as Blob[];
         const isLuxury = formData.get("isLuxury") === "true";
+        const genre = formData.get("genre") as string;
 
         if (!imageFiles || imageFiles.length === 0) {
             return NextResponse.json({ message: "At least one image is required" }, { status: 400 });
@@ -35,7 +36,8 @@ export async function POST(req: NextRequest){
             price: parseFloat(price),
             category,
             isLuxury,
-            image: validUrls
+            image: validUrls,
+            genre
         })
 
         return NextResponse.json(
