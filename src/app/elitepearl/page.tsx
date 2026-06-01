@@ -1,16 +1,22 @@
 import HeroSection from "@/components/HeroSection";
 import Navbar from "@/components/Navbar";
-import React from "react";
 import CategorySliderElite from "@/components/CategorySliderElite";
 import EliteFooter from "@/components/EliteFooter";
+import connectDB from "@/lib/db";
+import Product from "@/models/productModel";
+import MostViewedClassic from "@/components/MostViewedClassic";
 
-export default function ElitePage() {
+export default async function ElitePage() {
+    await connectDB();
+    const res = await Product.find({ isLuxury: true }).sort({ views: -1 }).limit(3);
+    const plainRes = JSON.parse(JSON.stringify(res));
     return (
         <div>
            <Navbar />
            <HeroSection />
            <CategorySliderElite />
+           <MostViewedClassic products={plainRes} titleColor="text-black" buttonColor="bg-[#D4AF37]" />
            <EliteFooter />
-        </div>
+        </div >
     );
 }
