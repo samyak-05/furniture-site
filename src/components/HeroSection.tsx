@@ -26,7 +26,7 @@ export default function HeroSection() {
   useEffect(() => {
     async function fetchHeroProducts() {
       try {
-        const response = await fetch('/api/products/elite-hero');
+        const response = await fetch('/api/product/elite-hero');
         if (response.ok) {
           const data = await response.json();
           setProducts(data);

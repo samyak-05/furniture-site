@@ -14,6 +14,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   
   const isElite = pathname.startsWith('/elite');
@@ -38,6 +39,11 @@ export default function Navbar() {
       router.push('/classicshell');
     }
   };
+
+  // Ensure client-side values match server initial state by delaying auth section mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -130,11 +136,12 @@ export default function Navbar() {
             <Search size={18} strokeWidth={1.5} />
           </button>
 
-          {status === "loading" ? (
+          {!mounted || status === "loading" ? (
             <div className="w-5 h-5 rounded-full border border-current/20 border-t-current animate-spin" />
           ) : status === "authenticated" ? (
             <div className="relative" ref={profileRef}>
               <button 
+                type="button"
                 onClick={() => setIsOpen(!isOpen)} 
                 className={`flex items-center gap-1 p-1 rounded-full border ${theme.border} hover:bg-black/5 transition-all`}
               >
@@ -163,6 +170,7 @@ export default function Navbar() {
                       <Link href="/profile" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium tracking-wider uppercase hover:bg-black/5 rounded-lg transition-all"><User size={13} /> Profile</Link>
                       <Link href="/orders" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium tracking-wider uppercase hover:bg-black/5 rounded-lg transition-all"><Package size={13} /> Orders</Link>
                       <button 
+                        type="button"
                         onClick={() => signOut()} 
                         className="w-full flex items-center gap-2.5 px-3 py-2 mt-0.5 text-xs font-bold tracking-wider uppercase text-red-500 hover:bg-red-50/10 rounded-lg transition-all text-left"
                       >
@@ -174,7 +182,7 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
           ) : (
-            <Link href="/signin" className={`p-1 sm:p-1.5 ${theme.textHover} transition-colors`}>
+            <Link href="/signin" className={`p-1 sm:p-1.5 ${theme.textHover} transition-colors inline-flex items-center justify-center`}>
               <User size={18} strokeWidth={1.5} />
             </Link>
           )}
@@ -252,7 +260,7 @@ export default function Navbar() {
               </div>
 
               <div className="text-[10px] tracking-widest uppercase opacity-50 mt-auto pt-6 border-t">
-                © {new Date().getFullYear()} Vanaura Estate.
+                © {new Date().getFullYear()} VANAURA LIVING.
               </div>
             </motion.div>
           </>

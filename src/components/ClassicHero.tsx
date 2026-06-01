@@ -25,7 +25,7 @@ export default function HeroSectionClassic() {
   useEffect(() => {
     async function fetchClassicProducts() {
       try {
-        const response = await fetch('/api/products/classic-hero');
+        const response = await fetch('/api/product/classic-hero');
         if (response.ok) {
           const data = await response.json();
           setProducts(data);
@@ -80,7 +80,9 @@ export default function HeroSectionClassic() {
               src={activeProduct.image[0]} 
               alt={activeProduct.name}
               fill
-              priority
+              priority // Forces high-priority immediate loading
+              unoptimized // 👈 Bypasses local server compression and forces full raw Cloudinary resolution
+              sizes="100vw" // 👈 Explicitly tells the framework the asset takes up the full browser viewport
               className="object-cover object-center filter brightness-[0.78] contrast-[1.05]"
             />
             {/* Royal blue vignette overlay integration */}
