@@ -10,7 +10,7 @@ export default function ClassicFooter() {
           {/* LEFT: BRAND DESCRIPTION */}
           <div className="md:col-span-5 flex flex-col gap-6">
             <h2 className="text-2xl md:text-3xl font-light tracking-[0.15em] text-[#4A3B32] font-serif uppercase">
-              VANAURA <span className="text-xs uppercase font-sans tracking-[0.3em] ml-2 text-[#4A3B32] font-black opacity-30">Classic</span>
+              VANAURA <span className="text-xs uppercase font-sans tracking-[0.3em] ml-2 text-[#4A3B32] font-black opacity-30">Platinum</span>
             </h2>
             <p className="text-sm tracking-wide leading-relaxed text-[#4A3B32]/80 max-w-sm font-sans font-light">
               Handcrafted legacy furniture curated in natural royal fabrics, architectural stones, and flawless brushed golden frames. Shaping spaces for generational comfort.

@@ -17,26 +17,29 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   
-  const isElite = pathname.startsWith('/elite');
+  const isPlatinum = pathname.startsWith('/platinum');
   const user = session?.user;
   const tag = user?.role || "customer";
 
+  // STYLING INVERSION: 
+  // isPlatinum now gets the lighter blue palette (formerly classic).
+  // The fallback (Gold) gets the warm terracotta/brown palette (formerly elite).
   const theme = {
-    bg: isElite ? 'bg-[#F5DBCE]' : 'bg-[#F1FAFF]',
-    text: isElite ? 'text-[#4C2B12]' : 'text-[#4A3B32]',
-    textHover: isElite ? 'hover:text-[#4C2B12]/70' : 'hover:opacity-70',
-    accentBg: isElite ? 'bg-[#4C2B12]' : 'bg-[#D4AF37]', 
-    accentText: isElite ? 'text-[#F5DBCE]' : 'text-white', 
-    border: isElite ? 'border-[#4C2B12]/10' : 'border-[#4A3B32]/10',
-    inputBg: isElite ? 'bg-[#4C2B12]/5' : 'bg-[#4A3B32]/5',
-    inputFocus: isElite ? 'focus:border-[#4C2B12]' : 'focus:border-[#4A3B32]'
+    bg: isPlatinum ? 'bg-[#F1FAFF]' : 'bg-[#F5DBCE]',
+    text: isPlatinum ? 'text-[#4A3B32]' : 'text-[#4C2B12]',
+    textHover: isPlatinum ? 'hover:opacity-70' : 'hover:text-[#4C2B12]/70',
+    accentBg: isPlatinum ? 'bg-[#D4AF37]' : 'bg-[#4C2B12]', 
+    accentText: isPlatinum ? 'text-white' : 'text-[#F5DBCE]', 
+    border: isPlatinum ? 'border-[#4A3B32]/10' : 'border-[#4C2B12]/10',
+    inputBg: isPlatinum ? 'bg-[#4A3B32]/5' : 'bg-[#4C2B12]/5',
+    inputFocus: isPlatinum ? 'focus:border-[#4A3B32]' : 'focus:border-[#4C2B12]'
   };
 
-  const toggleMode = (targetMode: 'classic' | 'elite') => {
-    if (targetMode === 'elite' && !isElite) {
-      router.push('/elitepearl');
-    } else if (targetMode === 'classic' && isElite) {
-      router.push('/classicshell');
+  const toggleMode = (targetMode: 'gold' | 'platinum') => {
+    if (targetMode === 'platinum' && !isPlatinum) {
+      router.push('/platinum');
+    } else if (targetMode === 'gold' && isPlatinum) {
+      router.push('/gold');
     }
   };
 
@@ -114,17 +117,17 @@ export default function Navbar() {
           <div className={`flex items-center gap-0.5 sm:gap-1 bg-black/5 border ${theme.border} p-0.5 sm:p-1 rounded-full text-[9px] sm:text-[10px] font-medium tracking-widest uppercase ${theme.text}`}>
             <button 
               type="button"
-              className={`px-2 sm:px-3 py-1 cursor-pointer rounded-full transition-all duration-300 ${!isElite ? `${theme.accentBg} ${theme.accentText} font-black shadow-sm` : 'opacity-80 hover:opacity-100'}`} 
-              onClick={() => toggleMode('classic')}
+              className={`px-2 sm:px-3 py-1 cursor-pointer rounded-full transition-all duration-300 ${!isPlatinum ? `${theme.accentBg} ${theme.accentText} font-black shadow-sm` : 'opacity-80 hover:opacity-100'}`} 
+              onClick={() => toggleMode('gold')}
             >
-              Shell
+              Gold
             </button>
             <button 
               type="button"
-              className={`px-2 sm:px-3 py-1 cursor-pointer rounded-full transition-all duration-300 ${isElite ? `${theme.accentBg} ${theme.accentText} font-bold shadow-sm` : 'opacity-80 hover:opacity-100'}`} 
-              onClick={() => toggleMode('elite')}
+              className={`px-2 sm:px-3 py-1 cursor-pointer rounded-full transition-all duration-300 ${isPlatinum ? `${theme.accentBg} ${theme.accentText} font-bold shadow-sm` : 'opacity-80 hover:opacity-100'}`} 
+              onClick={() => toggleMode('platinum')}
             >
-              Pearl
+              Platinum
             </button>
           </div>
         )}
@@ -145,7 +148,7 @@ export default function Navbar() {
                 onClick={() => setIsOpen(!isOpen)} 
                 className={`flex items-center gap-1 p-1 rounded-full border ${theme.border} hover:bg-black/5 transition-all`}
               >
-                <div className={`relative w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden flex items-center justify-center ${isElite ? 'bg-[#4C2B12] text-[#F5DBCE]' : 'bg-[#4A3B32] text-white'} font-bold text-[9px] sm:text-[10px]`}>
+                <div className={`relative w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden flex items-center justify-center ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} font-bold text-[9px] sm:text-[10px]`}>
                   {user?.image ? (
                     <Image src={user.image} alt="Profile" fill className="object-cover" />
                   ) : user?.name?.[0].toUpperCase() || 'U'}
@@ -159,7 +162,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: 8, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                    className={`absolute right-0 mt-3 w-48 sm:w-56 overflow-hidden rounded-xl shadow-xl border ${theme.border} ${isElite ? 'bg-[#F5DBCE]' : 'bg-[#F1FAFF]'} ${theme.text}`}
+                    className={`absolute right-0 mt-3 w-48 sm:w-56 overflow-hidden rounded-xl shadow-xl border ${theme.border} ${isPlatinum ? 'bg-[#F1FAFF]' : 'bg-[#F5DBCE]'} ${theme.text}`}
                   >
                     <div className="px-4 py-3 border-b border-current/10 bg-current/5">
                       <p className="text-xs font-bold truncate leading-tight text-current">{user?.name}</p>
@@ -192,7 +195,7 @@ export default function Navbar() {
             <span className="text-[10px] font-semibold tracking-widest uppercase hidden lg:inline">Cart</span>
             <div className="relative">
               <ShoppingBag size={18} strokeWidth={1.5} />
-              <span className={`absolute -top-1 -right-1 ${isElite ? 'bg-[#4C2B12] text-[#F5DBCE]' : 'bg-[#4A3B32] text-white'} text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold shadow-sm`}>
+              <span className={`absolute -top-1 -right-1 ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold shadow-sm`}>
                 0
               </span>
             </div>
@@ -243,7 +246,7 @@ export default function Navbar() {
                       <ShoppingBag size={16} strokeWidth={1.5} />
                       Cart Collection
                     </span>
-                    <span className={`text-[10px] ${isElite ? 'bg-[#4C2B12] text-[#F5DBCE]' : 'bg-[#4A3B32] text-white'} px-2 py-0.5 rounded-full font-bold`}>
+                    <span className={`text-[10px] ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} px-2 py-0.5 rounded-full font-bold`}>
                       0
                     </span>
                   </Link>

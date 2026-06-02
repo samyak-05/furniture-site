@@ -14,7 +14,7 @@ interface IProduct {
   image: string[];
 }
 
-export default function HeroSectionClassic() {
+export default function ClassicHero() {
   const router = useRouter();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -49,8 +49,8 @@ export default function HeroSectionClassic() {
 
   if (loading) {
     return (
-      <div className="w-full h-screen bg-[#0F2C59] flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-white/20 border-t-[#D4AF37] rounded-full animate-spin" />
+      <div className="w-full h-screen bg-[#F5DBCE] flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-black/20 border-t-black rounded-full animate-spin" />
       </div>
     );
   }
@@ -63,17 +63,17 @@ export default function HeroSectionClassic() {
   };
 
   return (
-    <section className="relative w-full h-screen bg-[#0F2C59] overflow-hidden flex flex-col justify-between pt-24 select-none">
+    <section className="relative w-full h-screen bg-[#F5DBCE] overflow-hidden flex flex-col justify-between pt-24 select-none">
       
       {/* BACKGROUND IMAGE SLIDE FRAME */}
-      <div className="absolute inset-0 w-full h-full z-0 bg-[#0F2C59]">
+      <div className="absolute inset-0 w-full h-full z-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
-            initial={{ opacity: 0, scale: 1.01 }}
+            initial={{ opacity: 0, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: luxuryEase }}
+            transition={{ duration: 1.5, ease: luxuryEase }}
             className="absolute inset-0 w-full h-full"
           >
             <Image
@@ -81,18 +81,18 @@ export default function HeroSectionClassic() {
               alt={activeProduct.name}
               fill
               priority // Forces high-priority immediate loading
-              unoptimized // 👈 Bypasses local server compression and forces full raw Cloudinary resolution
-              sizes="100vw" // 👈 Explicitly tells the framework the asset takes up the full browser viewport
-              className="object-cover object-center filter brightness-[0.78] contrast-[1.05]"
+              unoptimized // Bypasses local server compression and forces full raw Cloudinary resolution
+              sizes="100vw" // Explicitly tells the framework the asset takes up the full browser viewport
+              className="object-cover object-center filter brightness-[0.88]"
             />
-            {/* Royal blue vignette overlay integration */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0F2C59]/30 via-transparent to-[#0F2C59]/80 z-10" />
+            {/* Blended Peach Cream & Shadow masks */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#F5DBCE]/30 via-transparent to-black/40 z-10" />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* TOP COMPOSITION - BALANCED PRODUCT TITLE IN PURE WHITE */}
-      <div className="relative z-20 w-full flex flex-col items-center text-center px-6 mt-16 md:mt-24 max-w-6xl mx-auto">
+      {/* TOP COMPOSITION - BALANCED PRODUCT TITLE */}
+      <div className="relative z-20 w-full flex flex-col items-center text-center px-4 mt-12 md:mt-16">
         <div className="h-32 md:h-48 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.h1 
@@ -101,7 +101,7 @@ export default function HeroSectionClassic() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 1, ease: luxuryEase }}
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light text-white tracking-wide leading-tight uppercase filter drop-shadow-md text-center"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light text-black tracking-wide leading-tight uppercase filter drop-shadow-md text-center"
             >
               {activeProduct.name}
             </motion.h1>
@@ -109,57 +109,57 @@ export default function HeroSectionClassic() {
         </div>
         
         <motion.p 
-          initial={{ opacity: 0, tracking: "0.2em" }}
-          animate={{ opacity: 0.9, tracking: "0.4em" }}
-          transition={{ delay: 0.3, duration: 1.2, ease: luxuryEase }}
-          className="text-xs sm:text-sm font-semibold text-white uppercase pl-[0.4em] mt-4 tracking-[0.4em] drop-shadow-sm opacity-80"
+          initial={{ opacity: 0, tracking: "0.1em" }}
+          animate={{ opacity: 0.9, tracking: "0.45em" }}
+          transition={{ delay: 0.4, duration: 1.2, ease: luxuryEase }}
+          className="text-xs sm:text-sm font-light text-black uppercase pl-[0.45em] mt-4 tracking-[0.45em] drop-shadow-sm"
         >
           THE NEW COLLECTION
         </motion.p>
       </div>
 
       {/* BOTTOM LAYOUT SYSTEM PANEL */}
-      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-16 pb-16 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-8 mt-auto">
+      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-16 pb-12 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-8 mt-auto">
         
-        {/* Left Column: Fixed description block in White Text */}
-        <div className="max-w-xs md:max-w-xl h-20 flex flex-col justify-end">
+        {/* Left Column: Descriptions remain cleanly overlayed in soft off-white text */}
+        <div className="max-w-xs md:max-w-md h-24 flex flex-col justify-end">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.5, ease: luxuryEase }}
+              transition={{ duration: 0.6, ease: luxuryEase }}
             >
-              <p className="text-xs sm:text-sm font-light leading-relaxed text-white/90 drop-shadow-md font-sans line-clamp-3">
+              <p className="text-[12px] font-light leading-relaxed text-[#FFFDF9] mt-1.5 font-sans drop-shadow-sm line-clamp-3">
                 {activeProduct.description}
               </p>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Right Column: Progress Indicators & Golden Click Buttons */}
+        {/* Right Column: Progress Indicators & Black Action Unit */}
         <div className="flex flex-col items-start sm:items-end gap-6 w-full sm:w-auto shrink-0">
           
-          {/* Ticker dots rendered explicitly in Pure White */}
+          {/* Visual Progress indices mapped in stark Black */}
           {products.length > 1 && (
-            <div className="flex gap-2.5 mb-1">
+            <div className="flex gap-2.5 mb-2">
               {products.map((_, index) => (
                 <div 
                   key={index} 
                   className={`h-[2px] rounded-full transition-all duration-1000 ${
-                    currentIndex === index ? 'w-12 bg-white' : 'w-4 bg-white/30'
+                    currentIndex === index ? 'w-12 bg-black' : 'w-4 bg-black/30'
                   }`}
                 />
               ))}
             </div>
           )}
 
-          {/* Golden Focal Point Trigger Action Elements */}
+          {/* Action unit */}
           <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto justify-between sm:justify-end">
             <button 
               onClick={() => router.push(`/product/${activeProduct._id}`)}
-              className="px-8 py-3.5 bg-[#D4AF37] text-white rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:bg-[#B8942A] hover:shadow-2xl hover:shadow-[#D4AF37]/40 shadow-lg active:scale-95 whitespace-nowrap"
+              className="px-8 py-3.5 bg-black text-[#F5DBCE] cursor-pointer rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 hover:bg-neutral-900 hover:shadow-2xl hover:shadow-black/40 shadow-lg active:scale-95 whitespace-nowrap"
             >
               Shop Now
             </button>

@@ -9,7 +9,7 @@ export default function EliteFooter() {
           
           <div className="md:col-span-5 flex flex-col gap-6">
             <h2 className="text-2xl md:text-3xl font-light tracking-[0.15em] text-black font-serif uppercase">
-              VANAURA <span className="text-xs uppercase font-sans tracking-[0.3em] ml-2 opacity-60">Elite</span>
+              VANAURA <span className="text-xs uppercase font-sans tracking-[0.3em] ml-2 opacity-60">Gold</span>
             </h2>
             <p className="text-sm tracking-wide leading-relaxed text-black/70 max-w-sm font-sans">
               Handcrafted legacy furniture curated in natural peach cream clays, architectural stones, and rich wooden textures. Shaping spaces for generational comfort.
