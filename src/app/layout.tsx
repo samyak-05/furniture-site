@@ -1,6 +1,7 @@
 'use client';
 import "./globals.css";
 import Provider from "@/Provider";
+import StoreProvider from "@/redux/StoreProvider";
 import { Suspense, useEffect } from "react";
 
 export default function RootLayout({
@@ -26,9 +27,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <Provider>
+          <StoreProvider>
           <Suspense fallback={<div className="fixed inset-0 bg-[#FAF9F6]" />}>
             {children}
           </Suspense>
+          </StoreProvider>
         </Provider>
       </body>
     </html>
