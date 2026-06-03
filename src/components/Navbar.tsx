@@ -6,6 +6,8 @@ import { ShoppingBag, ChevronDown, User, Package, LogOut, Search, X, Menu } from
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -20,6 +22,9 @@ export default function Navbar() {
   const isPlatinum = pathname.startsWith('/platinum');
   const user = session?.user;
   const tag = user?.role || "customer";
+  
+  // Destructure cartData properly from your redux slice
+  const { cartData } = useSelector((state: RootState) => state.cart);
 
   // STYLING INVERSION: 
   // isPlatinum now gets the lighter blue palette (formerly classic).
@@ -190,13 +195,14 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* DESKTOP-ONLY CART VIEW (HIDDEN ON MOBILE SCREEN OVERLAPS) */}
+          {/* DESKTOP-ONLY CART VIEW WITH LIVE STORE ITEM LENGTH */}
           <Link href="/cart" className={`hidden md:flex p-1.5 items-center gap-1.5 ${theme.textHover} transition-colors`}>
             <span className="text-[10px] font-semibold tracking-widest uppercase hidden lg:inline">Cart</span>
             <div className="relative">
               <ShoppingBag size={18} strokeWidth={1.5} />
               <span className={`absolute -top-1 -right-1 ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold shadow-sm`}>
-                0
+                {/* ✅ LIVE RE-RENDERING REDUX COUNTER */}
+                {cartData ? cartData.length : 0}
               </span>
             </div>
           </Link>
@@ -247,7 +253,8 @@ export default function Navbar() {
                       Cart Collection
                     </span>
                     <span className={`text-[10px] ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} px-2 py-0.5 rounded-full font-bold`}>
-                      0
+                      {/* ✅ LIVE RE-RENDERING REDUX COUNTER FOR MOBILE VIEW */}
+                      {cartData ? cartData.length : 0}
                     </span>
                   </Link>
 
@@ -269,6 +276,6 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </nav> 
   );
 }
