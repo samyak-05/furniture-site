@@ -3,6 +3,7 @@ import "./globals.css";
 import Provider from "@/Provider";
 import StoreProvider from "@/redux/StoreProvider";
 import { Suspense, useEffect } from "react";
+import InitUser from "@/InitUser";
 
 export default function RootLayout({
   children,
@@ -29,6 +30,7 @@ export default function RootLayout({
         <Provider>
           <StoreProvider>
           <Suspense fallback={<div className="fixed inset-0 bg-[#FAF9F6]" />}>
+          <InitUser />
             {children}
           </Suspense>
           </StoreProvider>
