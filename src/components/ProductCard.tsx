@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/redux/cartSlice';
+import { useSession } from 'next-auth/react';
 
 interface IProduct {
   _id?: mongoose.Types.ObjectId;
@@ -26,6 +27,7 @@ function ProductCard({ product }: { product: IProduct }) {
   const router = useRouter();
   const productId = product._id?.toString();
   const dispatch = useDispatch<AppDispatch>();
+  const { status } = useSession();
 
   const navigateToProduct = () => {
     if (!productId) return;
@@ -37,6 +39,14 @@ function ProductCard({ product }: { product: IProduct }) {
     router.push(`/product/${productId}`);
   };
 
+  const handleAddToCartProtected = () => {
+    if (status === 'authenticated') {
+      dispatch(addToCart(product as any));
+    } else {
+      router.push('/signin');
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -46,7 +56,6 @@ function ProductCard({ product }: { product: IProduct }) {
       className="group relative bg-white rounded-2xl p-5 flex flex-col justify-between ring-1 ring-black/[0.04] hover:bg-[#FBFBFA] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] transition-all duration-500 select-none"
     >
       <div>
-        {/* ULTRA-CLEAN IMAGE ASPECT FRAME */}
         <div className="w-full aspect-[4/4] relative overflow-hidden rounded-xl bg-[#F6F6F5] ring-1 ring-black/[0.02]">
           {product.image && product.image[0] && (
             <>
@@ -63,7 +72,6 @@ function ProductCard({ product }: { product: IProduct }) {
           )}
         </div>
 
-        {/* METADATA & TYPOGRAPHY SECTION */}
         <div className="flex flex-col gap-2 mt-5 px-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[9px] font-semibold text-neutral-400 uppercase tracking-[0.2em] block">
@@ -86,7 +94,6 @@ function ProductCard({ product }: { product: IProduct }) {
         </div>
       </div>
 
-      {/* FOOTER & BUTTON CONTROLS */}
       <div className="flex flex-col gap-4 mt-6 px-0.5">
         <div className="flex items-baseline justify-between pt-4 border-t border-neutral-100">
           <span className="text-[10px] font-light text-neutral-400 uppercase tracking-widest">Value</span>
@@ -95,7 +102,6 @@ function ProductCard({ product }: { product: IProduct }) {
           </span>
         </div>
 
-        {/* INTERACTION LAYOUT */}
         <div className="flex items-center gap-2 w-full pt-1">
           <motion.button
             whileTap={{ scale: 0.98 }}
@@ -107,13 +113,13 @@ function ProductCard({ product }: { product: IProduct }) {
 
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => dispatch(addToCart({ ...product, quantity: 1 }))} 
+            onClick={handleAddToCartProtected}
             aria-label="Add to Cart"
             className="p-3 bg-neutral-950 hover:bg-neutral-800 text-white rounded-xl transition-colors duration-300 flex items-center justify-center shadow-sm aspect-square cursor-pointer"
           >
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
-              fill="none"
+              fill="none" 
               viewBox="0 0 24 24" 
               strokeWidth={1.6} 
               stroke="currentColor" 
