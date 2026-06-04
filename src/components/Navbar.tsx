@@ -7,11 +7,13 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setMode } from '@/redux/modeSlice';
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const dispatch = useDispatch();
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -19,16 +21,15 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   
-  const isPlatinum = pathname.startsWith('/platinum');
   const user = session?.user;
   const tag = user?.role || "customer";
   
-  // Destructure cartData properly from your redux slice
+  // Dynamic slices connection
   const { cartData } = useSelector((state: RootState) => state.cart);
+  const currentMode = useSelector((state: RootState) => state.mode.currentMode);
+  const isPlatinum = currentMode === 'platinum';
 
-  // STYLING INVERSION: 
-  // isPlatinum now gets the lighter blue palette (formerly classic).
-  // The fallback (Gold) gets the warm terracotta/brown palette (formerly elite).
+  // Dynamic system styling map
   const theme = {
     bg: isPlatinum ? 'bg-[#F1FAFF]' : 'bg-[#F5DBCE]',
     text: isPlatinum ? 'text-[#4A3B32]' : 'text-[#4C2B12]',
@@ -40,15 +41,23 @@ export default function Navbar() {
     inputFocus: isPlatinum ? 'focus:border-[#4A3B32]' : 'focus:border-[#4C2B12]'
   };
 
+  // ✅ FIXED: Toggle handler explicitly mapping navigation target workflows to /gold
   const toggleMode = (targetMode: 'gold' | 'platinum') => {
-    if (targetMode === 'platinum' && !isPlatinum) {
+    dispatch(setMode(targetMode));
+    
+    // If inside a utility screen, shift theme layout states locally without running redirects
+    if (pathname.startsWith('/cart') || pathname.startsWith('/profile') || pathname.startsWith('/orders')) {
+      return;
+    }
+    
+    // Core room routing navigation logic mapping
+    if (pathname.startsWith('/platinum') && targetMode === 'gold') {
+      router.push('/gold'); // 🚀 Explicitly route target to gold experience portal
+    } else if ((pathname === '/' || pathname.startsWith('/gold')) && targetMode === 'platinum') {
       router.push('/platinum');
-    } else if (targetMode === 'gold' && isPlatinum) {
-      router.push('/gold');
     }
   };
 
-  // Ensure client-side values match server initial state by delaying auth section mounting
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -66,7 +75,7 @@ export default function Navbar() {
   return (
     <nav className={`w-full ${theme.bg} ${theme.border} border-b px-4 sm:px-6 md:px-16 py-4 md:py-5 flex justify-between items-center z-[100] fixed top-0 left-0 shadow-sm select-none transition-colors duration-500`}>
       
-      {/* MOBILE SEARCH OVERLAY PANEL */}
+      {/* SEARCH SYSTEM OVERLAY */}
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div 
@@ -91,7 +100,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* LEFT AREA: DESKTOP NAVIGATION & MOBILE HAMBURGER BUTTON */}
       <div className="flex items-center gap-3 md:gap-8">
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -102,22 +110,20 @@ export default function Navbar() {
         </button>
 
         <div className={`hidden md:flex items-center gap-8 text-[11px] font-sans tracking-[0.25em] uppercase ${theme.text} font-bold`}>
-          <Link href="/" className={`${theme.textHover} transition-colors`}>Home</Link>
+          <Link href={isPlatinum ? "/platinum" : "/gold"} className={`${theme.textHover} transition-colors`}>Home</Link>
           <Link href="/story" className={`${theme.textHover} transition-colors`}>Our Story</Link>
         </div>
       </div>
 
-      {/* CENTER AREA: VANAURA LOGO */}
       <div className="md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 text-center z-10">
-        <Link href="/" className={`text-xl sm:text-2xl md:text-3xl font-serif font-light tracking-[0.15em] ${theme.text} uppercase transition-all`}>
+        <Link href={isPlatinum ? "/platinum" : "/gold"} className={`text-xl sm:text-2xl md:text-3xl font-serif font-light tracking-[0.15em] ${theme.text} uppercase transition-all`}>
           VANAURA
         </Link>
       </div>
 
-      {/* RIGHT AREA: TOGGLER SHIELDS & UTILITIES CLUSTER */}
       <div className="flex items-center gap-2 sm:gap-4 md:gap-8 z-20">
         
-        {/* RESPONSIVE MODE CONTROLLER */}
+        {/* PREMIUM ACCOUNT LEVEL TOGGLERS */}
         {tag === "customer" && (
           <div className={`flex items-center gap-0.5 sm:gap-1 bg-black/5 border ${theme.border} p-0.5 sm:p-1 rounded-full text-[9px] sm:text-[10px] font-medium tracking-widest uppercase ${theme.text}`}>
             <button 
@@ -137,7 +143,6 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* UTILITY ICONS ACTION GROUP */}
         <div className={`flex items-center gap-1 sm:gap-2 md:gap-4 ${theme.text}`}>
           
           <button onClick={() => setIsSearchOpen(true)} className={`p-1 sm:p-1.5 ${theme.textHover} transition-colors`} aria-label="Search">
@@ -195,27 +200,23 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* DESKTOP-ONLY CART VIEW WITH LIVE STORE ITEM LENGTH */}
-          <Link href="/cart" className={`hidden md:flex p-1.5 items-center gap-1.5 ${theme.textHover} transition-colors`}>
+          <Link href="/cart" className={`p-1.5 flex items-center gap-1.5 ${theme.textHover} transition-colors`}>
             <span className="text-[10px] font-semibold tracking-widest uppercase hidden lg:inline">Cart</span>
             <div className="relative">
               <ShoppingBag size={18} strokeWidth={1.5} />
               <span className={`absolute -top-1 -right-1 ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold shadow-sm`}>
-                {/* ✅ LIVE RE-RENDERING REDUX COUNTER */}
                 {cartData ? cartData.length : 0}
               </span>
             </div>
           </Link>
           
         </div>
-
       </div>
 
-      {/* MOBILE EXPANDABLE SLIDE DRAWER MENU */}
+      {/* MOBILE EXPANDED DRAWER CLUSTER */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop Layer */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
@@ -223,7 +224,6 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="fixed inset-0 bg-black z-[120] md:hidden block"
             />
-            {/* Side Menu Drawer */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
@@ -240,9 +240,8 @@ export default function Navbar() {
                 </div>
                 
                 <div className={`flex flex-col gap-6 text-sm font-sans tracking-[0.2em] uppercase ${theme.text} font-semibold`}>
-                  <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-2 transition-all">Home</Link>
+                  <Link href={isPlatinum ? "/platinum" : "/gold"} onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-2 transition-all">Home</Link>
                   
-                  {/* MOBILE CART INTEGRATION INSIDE SIDEBAR */}
                   <Link 
                     href="/cart" 
                     onClick={() => setIsMobileMenuOpen(false)} 
@@ -253,7 +252,6 @@ export default function Navbar() {
                       Cart Collection
                     </span>
                     <span className={`text-[10px] ${isPlatinum ? 'bg-[#4A3B32] text-white' : 'bg-[#4C2B12] text-[#F5DBCE]'} px-2 py-0.5 rounded-full font-bold`}>
-                      {/* ✅ LIVE RE-RENDERING REDUX COUNTER FOR MOBILE VIEW */}
                       {cartData ? cartData.length : 0}
                     </span>
                   </Link>
