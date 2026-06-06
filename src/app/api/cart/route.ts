@@ -26,23 +26,30 @@ export async function POST(req: NextRequest) {
         }
 
         const { items } = await req.json();
-        await connectDB();
+        
+        if (!Array.isArray(items)) {
+            return NextResponse.json({ message: "Invalid payload layout structure" }, { status: 400 });
+        }
 
+        await connectDB();
         const formattedItems = items.map((item: any) => ({
             productId: item._id,
             name: item.name,
-            price: item.price,
+            price: typeof item.price === 'string' ? parseFloat(item.price) : item.price,
             image: item.image?.[0] || item.image || "",
-            quantity: item.quantity,
+            quantity: Number(item.quantity) || 1,
         }));
 
         const updatedCart = await Cart.findOneAndUpdate(
             { userId: session.user.id },
             { items: formattedItems },
-            { upsert: true, new: true }
+            { 
+                upsert: true, 
+                returnDocument: 'after' 
+            }
         );
 
-        return NextResponse.json(updatedCart.items, { status: 200 });
+        return NextResponse.json(updatedCart ? updatedCart.items : [], { status: 200 });
 
     } catch (err) {
         return NextResponse.json({ message: `Error Occured : ${err}` }, { status: 500 });
