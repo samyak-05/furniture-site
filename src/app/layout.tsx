@@ -1,14 +1,13 @@
-'use client';
 import "./globals.css";
 import Provider from "@/Provider";
 import StoreProvider from "@/redux/StoreProvider";
 import InitUser from "@/InitUser";
-import { useSyncLayoutMode } from "@/hooks/useSyncLayoutMode";
+import AppInitializer from "@/components/AppInitializer";
 
-function AppInitializer({ children }: { children: React.ReactNode }) {
-  useSyncLayoutMode(); 
-  return <>{children}</>;
-}
+export const analyticsConfig = {
+  title: "Vanaura Living",
+  description: "Premium Luxury Interiors",
+};
 
 export default function RootLayout({
   children,
@@ -21,8 +20,8 @@ export default function RootLayout({
         <Provider>
           <StoreProvider>
             <AppInitializer>          
-                <InitUser />
-                {children}
+              <InitUser />
+              {children}
             </AppInitializer>
           </StoreProvider>
         </Provider>
