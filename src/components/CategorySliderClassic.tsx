@@ -2,6 +2,7 @@
 import React, { useRef } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation' // 🚀 Import Next.js Router
 
 import premSit from '../assets/premSit.avif'
 import premHall from '../assets/premHall.webp'
@@ -10,12 +11,15 @@ import premBed from '../assets/premBed.avif'
 
 function CategorySliderClassic() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const router = useRouter(); // 🚀 Initialize Router Instance
 
+    // 🚀 UPDATED: Complete 5-category array including Living Room mapped to 'living'
     const categories = [
-        { id: 1, name: 'drawing room', icon: premHall },
-        { id: 2, name: 'bedroom', icon: premBed },
-        { id: 3, name: 'dining', icon: premDining },
-        { id: 4, name: 'sit out', icon: premSit },
+        { id: 1, name: 'living room', genre: 'living', icon: premHall },
+        { id: 2, name: 'drawing room', genre: 'drawing', icon: premHall },
+        { id: 3, name: 'bedroom', genre: 'bedroom', icon: premBed },
+        { id: 4, name: 'dining', genre: 'dining', icon: premDining },
+        { id: 5, name: 'sit out', genre: 'sitout', icon: premSit },
     ];
 
     const luxuryEase = [0.16, 1, 0.3, 1];
@@ -30,6 +34,11 @@ function CategorySliderClassic() {
                 behavior: 'smooth'
             });
         }
+    };
+
+    // 🚀 Navigation Interceptor Handler 
+    const handleCategoryClick = (genre: string) => {
+        router.push(`/platinum/${genre}`);
     };
 
     return (
@@ -63,13 +72,13 @@ function CategorySliderClassic() {
                 <div className="flex gap-3 pb-1 bg-white">
                     <button 
                         onClick={() => handleScroll('left')}
-                        className="w-11 h-11 rounded-full flex items-center justify-center text-[#0F2C59] bg-[#F5DBCE]/40 transition-all duration-300 hover:bg-[#0F2C59] hover:text-white active:scale-95"
+                        className="w-11 h-11 rounded-full flex items-center justify-center text-[#0F2C59] bg-[#F5DBCE]/40 transition-all duration-300 hover:bg-[#0F2C59] hover:text-white active:scale-95 cursor-pointer"
                     >
                         <span className="text-sm font-light">←</span>
                     </button>
                     <button 
                         onClick={() => handleScroll('right')}
-                        className="w-11 h-11 rounded-full flex items-center justify-center text-[#0F2C59] bg-[#F5DBCE]/40 transition-all duration-300 hover:bg-[#0F2C59] hover:text-white active:scale-95"
+                        className="w-11 h-11 rounded-full flex items-center justify-center text-[#0F2C59] bg-[#F5DBCE]/40 transition-all duration-300 hover:bg-[#0F2C59] hover:text-white active:scale-95 cursor-pointer"
                     >
                         <span className="text-sm font-light">→</span>
                     </button>
@@ -87,10 +96,12 @@ function CategorySliderClassic() {
                             hidden: { opacity: 0, y: 30 },
                             visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: luxuryEase } }
                         }}
-                        className="group flex flex-col gap-5 min-w-[300px] sm:min-w-[360px] md:min-w-[400px] p-0 bg-white border-none shadow-none snap-start cursor-pointer"
+                        // 🚀 FIXED: Dynamic path interceptor routing combined with click bubble enforcement
+                        onClick={() => handleCategoryClick(category.genre)} 
+                        className="group flex flex-col gap-5 min-w-[300px] sm:min-w-[360px] md:min-w-[400px] p-0 bg-white border-none shadow-none snap-start cursor-pointer pointer-events-auto"
                     >
                         {/* IMAGE FRAMES WITH ROUNDED CORNERS */}
-                        <div className="w-full aspect-[4/3] relative rounded-2xl overflow-hidden bg-neutral-100 shadow-sm">
+                        <div className="w-full aspect-[4/3] relative rounded-2xl overflow-hidden bg-neutral-100 shadow-sm pointer-events-none">
                             <Image 
                                 src={category.icon} 
                                 alt={category.name} 
@@ -101,7 +112,7 @@ function CategorySliderClassic() {
                         </div>
                         
                         {/* TEXT MODULES IN PURE ROYAL BLUE */}
-                        <div className="flex items-center justify-between px-1 bg-white">
+                        <div className="flex items-center justify-between px-1 bg-white pointer-events-none">
                             <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-[#0F2C59]">
                                 {category.name}
                             </h3>
