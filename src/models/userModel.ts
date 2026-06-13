@@ -19,6 +19,6 @@ const userSchema = new mongoose.Schema<IUser>({
     image: { type: String }
 }, { timestamps: true });
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema, "users");
 
 export default User;
