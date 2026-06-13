@@ -1,6 +1,9 @@
+'use client'
 import React from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function EliteFooter() {
+  const router = useRouter();
   return (
     <footer className="w-full bg-[#F5DBCE] text-black/80 mt-32 border-t border-black/10 font-light select-none">
       <div className="w-[90%] max-w-[1440px] mx-auto py-20 md:py-28 flex flex-col gap-16">
@@ -24,10 +27,11 @@ export default function EliteFooter() {
               Collections
             </h3>
             <ul className="flex flex-col gap-3.5 text-sm font-sans text-black/80">
-              <li className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Drawing Room</li>
-              <li className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Bedroom Sanctuary</li>
-              <li className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Dining & Lounge</li>
-              <li className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Veranda Sit Out</li>
+              <li onClick={()=>{router.push('/gold/drawing')}} className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Drawing Room</li>
+              <li onClick={()=>{router.push('/gold/bedroom')}} className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Bedroom Sanctuary</li>
+              <li onClick={()=>{router.push('/gold/dining')}} className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Dining & Lounge</li>
+              <li onClick={()=>{router.push('/gold/sitout')}} className="hover:text-black hover:translate-x-1 transition-all duration-300 cursor-pointer">Veranda Sit Out</li>
+              <li onClick={()=>{router.push('/gold/living')}} className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Living Room</li>
             </ul>
           </div>
 

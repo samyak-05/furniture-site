@@ -1,6 +1,9 @@
+'use client'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function ClassicFooter() {
+  const router = useRouter();
   return (
     <footer className="w-full bg-[#F1FAFF] text-[#4A3B32] mt-32 border-t border-[#4A3B32]/10 font-medium select-none">
       <div className="w-[90%] max-w-[1440px] mx-auto py-20 md:py-28 flex flex-col gap-16">
@@ -25,10 +28,11 @@ export default function ClassicFooter() {
               Collections
             </h3>
             <ul className="flex flex-col gap-3.5 text-sm font-sans text-[#4A3B32]/90">
-              <li className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Drawing Room</li>
-              <li className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Bedroom Sanctuary</li>
-              <li className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Dining & Lounge</li>
-              <li className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Veranda Sit Out</li>
+              <li onClick={()=>{router.push('/platinum/drawing')}} className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Drawing Room</li>
+              <li onClick={()=>{router.push('/platinum/bedroom')}} className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Bedroom Sanctuary</li>
+              <li onClick={()=>{router.push('/platinum/dining')}} className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Dining & Lounge</li>
+              <li onClick={()=>{router.push('/platinum/sitout')}} className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Veranda Sit Out</li>
+              <li onClick={()=>{router.push('/platinum/living')}} className="hover:opacity-65 hover:translate-x-1 transition-all duration-300 cursor-pointer">Living Room</li>
             </ul>
           </div>
 
