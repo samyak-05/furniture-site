@@ -2,8 +2,9 @@
 import Navbar from '@/components/Navbar';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { PackagePlus, LayoutGrid, X } from 'lucide-react';
+import { PackagePlus, LayoutGrid, ClipboardList, X } from 'lucide-react';
 import AddProduct from '@/components/AddProduct';
+import Link from 'next/link';
 
 export default function AdminPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -12,7 +13,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#FAF9F6] text-[#2A3439]">
       <Navbar />
 
-      <div className="max-w-4xl mx-auto pt-28 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto pt-28 px-4 sm:px-6 pb-16">
         
         {!isFormOpen ? (
           /* CARD GRID SELECTION VIEW */
@@ -34,9 +35,12 @@ export default function AdminPage() {
               </p>
             </button>
 
-            {/* BOX 2: PLACEHOLDER FOR ANOTHER ADMIN FUNCTION */}
-            <div className="bg-white border border-black/5 rounded-[40px] p-8 sm:p-10 flex flex-col items-start text-left shadow-[0_15px_40px_rgba(0,0,0,0.015)] transition-all duration-300">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-8">
+            {/* BOX 2: VIEW COLLECTIONS (PRODUCTS LIST) */}
+            <Link
+              href="/admin/products"
+              className="bg-white border border-black/5 rounded-[40px] p-8 sm:p-10 flex flex-col items-start text-left shadow-[0_15px_40px_rgba(0,0,0,0.015)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.03)] transition-all duration-300 group cursor-pointer w-full"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-8 group-hover:scale-105 transition-transform duration-300">
                 <LayoutGrid size={24} strokeWidth={2} />
               </div>
               <h2 className="text-2xl font-bold tracking-tight text-black mb-3">
@@ -45,7 +49,23 @@ export default function AdminPage() {
               <p className="text-gray-400 text-sm font-medium leading-relaxed">
                 Monitor live product distribution metrics, modify active item specifications, or clear completely depleted lines from production.
               </p>
-            </div>
+            </Link>
+
+            {/* BOX 3: MANAGE ORDERS */}
+            <Link
+              href="/admin/orders"
+              className="bg-white border border-black/5 rounded-[40px] p-8 sm:p-10 flex flex-col items-start text-left shadow-[0_15px_40px_rgba(0,0,0,0.015)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.03)] transition-all duration-300 group cursor-pointer w-full md:col-span-2"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-8 group-hover:scale-105 transition-transform duration-300">
+                <ClipboardList size={24} strokeWidth={2} />
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight text-black mb-3">
+                Manage Customer Orders
+              </h2>
+              <p className="text-gray-400 text-sm font-medium leading-relaxed">
+                Track full purchasing logs, check shipment progress tags, update delivery workflow status indicators, and view customer address maps.
+              </p>
+            </Link>
 
           </div>
         ) : (
@@ -70,7 +90,6 @@ export default function AdminPage() {
               </button>
             </div>
 
-            {/* Render your component here in place of the placeholder */}
             <AddProduct />
             
           </motion.div>
